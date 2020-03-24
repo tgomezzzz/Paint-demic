@@ -1,8 +1,5 @@
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
-
-import javafx.scene.shape.Rectangle;
-
 import java.awt.event.MouseEvent;
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -12,7 +9,9 @@ public class Canvas extends JComponent implements MouseInputListener {
 
     int pixels, pixelWidth;
     int[][] grid;
+    Rectangle2D[][] display;
     Rectangle2D mouseOver;
+    long startTime;
 
     public Canvas(int size, int pxls) {
         super.setPreferredSize(new Dimension(size, size));
@@ -22,6 +21,8 @@ public class Canvas extends JComponent implements MouseInputListener {
         this.pixels = pxls;
         this.pixelWidth = size / pixels;
         this.grid = new int[pixels][pixels];
+        this.display = new Rectangle2D[pixels][pixels];
+        this.startTime = System.nanoTime();
     }
 
     @Override
@@ -33,10 +34,29 @@ public class Canvas extends JComponent implements MouseInputListener {
             g.fill(mouseOver);
             g.draw(mouseOver);
         }
+
+        for (int r = 0; r < grid.length; r++) {
+            for (int c = 0; c < grid.length; c++) {
+                if (grid[r][c] > 0) {
+                    g.setColor(Color.GREEN);
+                    g.fill(display[r][c]);
+                    g.draw(display[r][c]);
+                }
+            }
+        }
+
+        repaint();
     }
 
     public int mouseToGridPos(int mousePos) {
         return mousePos / pixelWidth;
+    }
+
+    public boolean isValidIndex(int r, int c) {
+        if (r < 0 || c < 0 || r > grid.length - 1 || c > grid.length - 1) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -52,14 +72,21 @@ public class Canvas extends JComponent implements MouseInputListener {
     public void mousePressed(MouseEvent e) {}
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        System.out.println("Mouse dragged at (" + x + ", " + y + ")");
+
+        int gridX = mouseToGridPos(y);
+        int gridY = mouseToGridPos(x);
+
+        if (isValidIndex(gridX, gridY)) {
+            grid[gridX][gridY] = 1;
+            display[gridX][gridY] = new Rectangle2D.Double(gridY * pixelWidth, gridX * pixelWidth, pixelWidth, pixelWidth);
+        }
     }
+
+    @Override
+    public void mouseDragged(MouseEvent e) { }
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -68,8 +95,6 @@ public class Canvas extends JComponent implements MouseInputListener {
 
         int gridX = mouseToGridPos(y);
         int gridY = mouseToGridPos(x);
-        //System.out.println("Mouse moved at (" + x + ", " + y + ") -> (" + gridX + ", " + gridY + ")");
         mouseOver = new Rectangle2D.Double(gridY * pixelWidth, gridX * pixelWidth, pixelWidth, pixelWidth);
-        repaint();
     }
 }
