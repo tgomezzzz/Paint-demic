@@ -27,14 +27,12 @@ public class Main {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        //frame.getContentPane().setSize(400, 400);
         frame.getContentPane().add(comp1, BorderLayout.CENTER);
         frame.getContentPane().add(comp2, BorderLayout.SOUTH);
         frame.getContentPane().add(comp3, BorderLayout.EAST);
         frame.getContentPane().add(comp4, BorderLayout.WEST);
 
         frame.pack();
-        //frame.repaint();
 
     }
 
