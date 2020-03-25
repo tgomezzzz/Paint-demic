@@ -5,7 +5,7 @@ public class Main {
 
     public static final int CANVAS_SIZE = 600;
     public static final int CONTROL_PANEL_HEIGHT = 75;
-    public static final int BIT_SIZE = 16;
+    public static final int BIT_SIZE = 20;
 
     public static void main(String[] args) {
 

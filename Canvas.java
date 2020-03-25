@@ -8,10 +8,13 @@ import java.awt.geom.Rectangle2D;
 public class Canvas extends JComponent implements MouseInputListener {
 
     int pixels, pixelWidth;
+    int col = 1;
     int[][] grid;
     Rectangle2D[][] display;
     Rectangle2D mouseOver;
     long startTime;
+
+    Color[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.ORANGE};
 
     public Canvas(int size, int pxls) {
         super.setPreferredSize(new Dimension(size, size));
@@ -38,7 +41,7 @@ public class Canvas extends JComponent implements MouseInputListener {
         for (int r = 0; r < grid.length; r++) {
             for (int c = 0; c < grid.length; c++) {
                 if (grid[r][c] > 0) {
-                    g.setColor(Color.GREEN);
+                    g.setColor(colors[grid[r][c] - 1]);
                     g.fill(display[r][c]);
                     g.draw(display[r][c]);
                 }
@@ -57,6 +60,10 @@ public class Canvas extends JComponent implements MouseInputListener {
             return false;
         }
         return true;
+    }
+
+    public void setColor(int c) {
+        col = c;
     }
 
     @Override
@@ -80,7 +87,7 @@ public class Canvas extends JComponent implements MouseInputListener {
         int gridY = mouseToGridPos(x);
 
         if (isValidTile(gridX, gridY)) {
-            grid[gridX][gridY] = 1;
+            grid[gridX][gridY] = col;
             display[gridX][gridY] = new Rectangle2D.Double(gridY * pixelWidth, gridX * pixelWidth, pixelWidth, pixelWidth);
         }
     }
