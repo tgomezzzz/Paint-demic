@@ -52,7 +52,7 @@ public class Canvas extends JComponent implements MouseInputListener {
         return mousePos / pixelWidth;
     }
 
-    public boolean isValidIndex(int r, int c) {
+    public boolean isValidTile(int r, int c) {
         if (r < 0 || c < 0 || r > grid.length - 1 || c > grid.length - 1) {
             return false;
         }
@@ -79,7 +79,7 @@ public class Canvas extends JComponent implements MouseInputListener {
         int gridX = mouseToGridPos(y);
         int gridY = mouseToGridPos(x);
 
-        if (isValidIndex(gridX, gridY)) {
+        if (isValidTile(gridX, gridY)) {
             grid[gridX][gridY] = 1;
             display[gridX][gridY] = new Rectangle2D.Double(gridY * pixelWidth, gridX * pixelWidth, pixelWidth, pixelWidth);
         }
@@ -95,6 +95,10 @@ public class Canvas extends JComponent implements MouseInputListener {
 
         int gridX = mouseToGridPos(y);
         int gridY = mouseToGridPos(x);
-        mouseOver = new Rectangle2D.Double(gridY * pixelWidth, gridX * pixelWidth, pixelWidth, pixelWidth);
+        if (isValidTile(gridX, gridY)) {
+            mouseOver = new Rectangle2D.Double(gridY * pixelWidth, gridX * pixelWidth, pixelWidth, pixelWidth);
+        } else {
+            mouseOver = null;
+        }
     }
 }
